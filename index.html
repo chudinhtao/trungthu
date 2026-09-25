@@ -323,21 +323,32 @@
             </div>
         </section>
 
-        <!-- G5: VẼ TỰ DO 🎨 -->
-        <section class="section" id="sec-draw">
-            <div class="bg bg-blue"></div>
-            <canvas id="drawCanvas" class="draw-canvas"></canvas>
-            <div class="draw-palette">
-                <div class="draw-color dc-1" onclick="setColor('#ffeb3b')" style="background:#ffeb3b"></div>
-                <div class="draw-color dc-2" onclick="setColor('#ff6b9d')" style="background:#ff6b9d"></div>
-                <div class="draw-color dc-3" onclick="setColor('#00eeff')" style="background:#00eeff"></div>
-                <div class="draw-color dc-4" onclick="setColor('#ff4b2b')" style="background:#ff4b2b"></div>
-                <div class="draw-color dc-5" onclick="setColor('#00ff88')" style="background:#00ff88"></div>
-                <div class="draw-color dc-clear" onclick="clearDraw()">🗑️</div>
+        <!-- G5: VÒNG QUAY MAY MẮN 🎡 -->
+        <section class="section" id="sec-wheel">
+            <div class="bg bg-purple-deep"></div>
+            <div class="stars-container" id="starsWheel"></div>
+            
+            <div class="wheel-stage">
+                <div class="wheel-pointer">▼</div>
+                <div class="wheel-disc-wrap">
+                    <canvas id="wheelCanvas" width="280" height="280"></canvas>
+                </div>
+                <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">QUAY 🎯</button>
             </div>
+
+            <!-- Modal kết quả vòng quay -->
+            <div class="wheel-result-modal" id="wheelModal">
+                <div class="wheel-modal-content">
+                    <div class="wm-icon" id="wmIcon">🎁</div>
+                    <div class="wm-title" id="wmTitle">Chúc Mừng Thư!</div>
+                    <div class="wm-desc" id="wmDesc">Bạn vừa quay trúng điều ước may mắn!</div>
+                    <button class="wm-close-btn" onclick="closeWheelModal()">Quay Tiếp 🔄</button>
+                </div>
+            </div>
+
             <div class="content content-top z-10 pointer-none">
-                <h2 class="section-title shimmer-text">🎨 Vẽ Bầu Trời Thư</h2>
-                <p class="subtitle">Vẽ tự do bầu trời Trung Thu của riêng Thư!</p>
+                <h2 class="section-title neon-gold">🎡 Vòng Quay May Mắn</h2>
+                <p class="subtitle">Chạm "QUAY" để nhận điều bất ngờ dành riêng cho Thư!</p>
             </div>
         </section>
 
@@ -422,18 +433,30 @@
             </div>
         </section>
 
-        <!-- G10: VẼ CẦU VỒNG 🌈 -->
-        <section class="section" id="sec-rainbow">
-            <div class="bg bg-night-deep"></div>
-            <canvas id="rainbowCanvas" class="rainbow-canvas"></canvas>
-            <div class="rb-cats">
-                <div class="rb-cat rc1">🐱</div>
-                <div class="rb-cat rc2">😸</div>
+        <!-- G10: THẢ HOA ĐĂNG CẦU NGUYỆN 🪷 -->
+        <section class="section" id="sec-lantern-river" onclick="spawnRiverLantern(event)">
+            <div class="bg bg-lake"></div>
+            <!-- Trăng tròn và phản chiếu mặt sông -->
+            <div class="river-moon">🌕</div>
+            <div class="river-reflection"></div>
+            
+            <div class="river-water" id="riverWater">
+                <div class="water-wave wave-1"></div>
+                <div class="water-wave wave-2"></div>
+                <div class="lanterns-container" id="riverLanternsContainer"></div>
             </div>
-            <div id="rbCompleteMsg" class="rb-complete"></div>
+
+            <!-- Bộ đếm hoa đăng thả -->
+            <div class="river-counter">
+                <span>Đã thả: <strong id="riverCount">0</strong> hoa đăng 🪷</span>
+            </div>
+
+            <!-- Thỏ ngắm trăng bên sông -->
+            <div class="river-rabbit">🐰</div>
+
             <div class="content content-top z-10 pointer-none">
-                <h2 class="section-title rainbow-text">🌈 Vẽ Cầu Vồng</h2>
-                <p class="subtitle">Kéo ngón tay vẽ cầu vồng — màu tự đổi mỗi lần!</p>
+                <h2 class="section-title neon-gold">🪷 Thả Hoa Đăng Cầu Nguyện</h2>
+                <p class="subtitle">Chạm mặt nước để thả hoa đăng ước nguyện cho Thư!</p>
             </div>
         </section>
 

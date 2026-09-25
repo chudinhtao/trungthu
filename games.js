@@ -15,12 +15,12 @@ const gObserver = new IntersectionObserver((entries) => {
             if (id === 'sec-mooncake')      initMooncake();
             if (id === 'sec-cat-jump')      initCatJump();
             if (id === 'sec-drag-lantern')  initDragLantern();
-            if (id === 'sec-draw')          initDraw();
+            if (id === 'sec-wheel')         initWheel();
             if (id === 'sec-scroll-letter') initScrollLetter();
             if (id === 'sec-garden')        initGarden();
             if (id === 'sec-juggle')        initJuggle();
             if (id === 'sec-drum')          initDrum();
-            if (id === 'sec-rainbow')       initRainbow();
+            if (id === 'sec-lantern-river') initRiverLanterns();
         } else {
             if (id === 'sec-catch-stars')   teardownCatchStars();
             if (id === 'sec-cat-jump')      teardownCatJump();
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function generateGameStars() {
-    ['starsCatch','starsDl'].forEach(id => {
+    ['starsCatch','starsDl','starsWheel'].forEach(id => {
         const c = document.getElementById(id);
         if (!c) return;
         for (let i = 0; i < 40; i++) {
@@ -218,6 +218,9 @@ function initDragLantern() {
     };
     lan.addEventListener('touchstart', onStart, { passive: false });
     lan.addEventListener('mousedown', onStart);
+    lan.addEventListener('click', () => {
+        if (!dlReleased) releaseLantern();
+    });
     document.addEventListener('touchend', onEnd);
     document.addEventListener('mouseup', onEnd);
 }
@@ -246,51 +249,127 @@ function releaseLantern() {
 }
 
 /* ════════════════════════════════
-   G5: VẼ TỰ DO
+   G5: VÒNG QUAY MAY MẮN 🎡
 ════════════════════════════════ */
-let drawCanvas, drawCtx, drawActive = false, drawColor = '#ffeb3b', drawInited = false;
-const DRAW_COLORS = ['#ffeb3b','#ff6b9d','#00eeff','#ff4b2b','#00ff88'];
-let drawColorIdx = 0;
+let wheelInited = false;
+let wheelSpinning = false;
+let currentWheelRotation = 0;
 
-function initDraw() {
-    if (drawInited) return;
-    drawInited = true;
-    drawCanvas = document.getElementById('drawCanvas');
-    drawCtx = drawCanvas.getContext('2d');
-    const resize = () => {
-        const p = drawCanvas.parentElement;
-        drawCanvas.width  = p.clientWidth;
-        drawCanvas.height = p.clientHeight;
-    };
-    resize();
+const WHEEL_SECTORS = [
+    { label: 'Bánh Phúc',  icon: '🥮', color: '#ffb300', textColor: '#331500', title: '🥮 Bánh Phúc Lành!', desc: 'Nhận 1 chiếc bánh Trung Thu đầy ắp may mắn, bình an & tài lộc!' },
+    { label: 'Thỏ Quà',    icon: '🐰', color: '#ec407a', textColor: '#ffffff', title: '🐰 Thỏ Ngọc Trao Quà!', desc: 'Thỏ Ngọc gửi ngàn lời chúc bình an và nụ cười rạng rỡ đến Thư!' },
+    { label: 'Như Ý',      icon: '🌟', color: '#7e57c2', textColor: '#ffffff', title: '🌟 Vạn Sự Như Ý!', desc: 'Mọi ước mơ và dự định của Thư trong mùa trăng này đều thành hiện thực!' },
+    { label: 'Xinh Đẹp',   icon: '💖', color: '#ff5252', textColor: '#ffffff', title: '💖 Xinh Đẹp Rạng Ngời!', desc: 'Chúc Đào Anh Thư luôn luôn xinh xắn, đáng yêu và tự tin tỏa sáng!' },
+    { label: 'May Mắn',    icon: '🍀', color: '#26a69a', textColor: '#ffffff', title: '🍀 May Mắn Cả Năm!', desc: 'Vận may nhân đôi, học tập và mọi việc trong năm đều hanh thông rực rỡ!' },
+    { label: 'Trăng Vàng', icon: '🌕', color: '#ffd54f', textColor: '#331500', title: '🌕 Trăng Vàng Tỏa Sáng!', desc: 'Tỏa sáng như vầng trăng rằm tháng Tám, rạng ngời và ấm áp nhất!' },
+    { label: 'Bình An',    icon: '🏮', color: '#ab47bc', textColor: '#ffffff', title: '🏮 Bình An Hạnh Phúc!', desc: 'Gia đình an khang, Thư luôn vui vẻ, mạnh khỏe và yêu đời mỗi ngày!' },
+    { label: 'Anh Thư VIP',icon: '👑', color: '#ff7043', textColor: '#ffffff', title: '👑 Đào Anh Thư VIP!', desc: 'Thư là cô gái tuyệt vời và đáng yêu nhất mùa lễ hội Trung Thu!' }
+];
 
-    const getPos = (e) => {
-        const r = drawCanvas.getBoundingClientRect();
-        const t = e.touches ? e.touches[0] : e;
-        return { x: t.clientX - r.left, y: t.clientY - r.top };
-    };
-
-    drawCanvas.addEventListener('touchstart', e => { e.preventDefault(); drawActive = true; const p = getPos(e); drawCtx.beginPath(); drawCtx.moveTo(p.x, p.y); }, { passive: false });
-    drawCanvas.addEventListener('touchmove',  e => { e.preventDefault(); if (!drawActive) return; const p = getPos(e); drawCtx.lineTo(p.x, p.y); drawCtx.strokeStyle = drawColor; drawCtx.lineWidth = 8; drawCtx.lineCap = 'round'; drawCtx.stroke(); }, { passive: false });
-    drawCanvas.addEventListener('touchend',   () => { drawActive = false; });
-    drawCanvas.addEventListener('mousedown',  e => { drawActive = true; const p = getPos(e); drawCtx.beginPath(); drawCtx.moveTo(p.x, p.y); });
-    drawCanvas.addEventListener('mousemove',  e => { if (!drawActive) return; const p = getPos(e); drawCtx.lineTo(p.x, p.y); drawCtx.strokeStyle = drawColor; drawCtx.lineWidth = 8; drawCtx.lineCap = 'round'; drawCtx.stroke(); });
-    drawCanvas.addEventListener('mouseup',    () => { drawActive = false; });
-
-    // Mark first color active
-    document.querySelector('.dc-1')?.classList.add('active-color');
+function initWheel() {
+    if (wheelInited) return;
+    wheelInited = true;
+    drawWheelCanvas();
 }
 
-window.setColor = function(c) {
-    drawColor = c;
-    document.querySelectorAll('.draw-color').forEach(el => el.classList.remove('active-color'));
-    // find matching color button
-    document.querySelectorAll('.draw-color').forEach(el => {
-        if (el.style.background === c) el.classList.add('active-color');
-    });
+function drawWheelCanvas() {
+    const canvas = document.getElementById('wheelCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const numSectors = WHEEL_SECTORS.length;
+    const arc = (2 * Math.PI) / numSectors;
+    const radius = canvas.width / 2;
+    const cx = radius;
+    const cy = radius;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < numSectors; i++) {
+        const startAngle = i * arc;
+        const endAngle = startAngle + arc;
+
+        // Vẽ từng cánh quạt
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius - 4, startAngle, endAngle);
+        ctx.fillStyle = WHEEL_SECTORS[i].color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Vẽ biểu tượng và chữ
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = WHEEL_SECTORS[i].textColor;
+        ctx.font = 'bold 15px Quicksand, sans-serif';
+        ctx.fillText(WHEEL_SECTORS[i].icon + ' ' + WHEEL_SECTORS[i].label, radius - 16, 5);
+        ctx.restore();
+    }
+
+    // Vòng tròn trang trí tâm
+    ctx.beginPath();
+    ctx.arc(cx, cy, 38, 0, 2 * Math.PI);
+    ctx.fillStyle = '#1c0836';
+    ctx.fill();
+    ctx.strokeStyle = '#ffda00';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+}
+
+window.spinWheel = function() {
+    if (wheelSpinning) return;
+    wheelSpinning = true;
+    const disc = document.getElementById('wheelDisc');
+    const spinBtn = document.getElementById('wheelSpinBtn');
+    if (spinBtn) spinBtn.classList.add('spinning');
+
+    // Chọn ngẫu nhiên 1 ô may mắn
+    const targetIdx = Math.floor(Math.random() * WHEEL_SECTORS.length);
+    const numSectors = WHEEL_SECTORS.length;
+    const sectorAngle = 360 / numSectors;
+
+    const targetSectorCenter = (targetIdx + 0.5) * sectorAngle;
+    const extraSpins = 360 * (5 + Math.floor(Math.random() * 3));
+    
+    const currentMod = currentWheelRotation % 360;
+    const desiredFinalMod = (270 - targetSectorCenter + 360) % 360;
+    let delta = desiredFinalMod - currentMod;
+    if (delta <= 0) delta += 360;
+    
+    currentWheelRotation += extraSpins + delta;
+
+    const discWrap = document.querySelector('.wheel-disc-wrap');
+    if (discWrap) {
+        discWrap.style.transform = `rotate(${currentWheelRotation}deg)`;
+    }
+
+    setTimeout(() => {
+        wheelSpinning = false;
+        if (spinBtn) spinBtn.classList.remove('spinning');
+        showWheelResult(WHEEL_SECTORS[targetIdx]);
+    }, 4100);
 };
-window.clearDraw = function() {
-    if (drawCtx) drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+
+function showWheelResult(prize) {
+    const modal = document.getElementById('wheelModal');
+    const icon = document.getElementById('wmIcon');
+    const title = document.getElementById('wmTitle');
+    const desc = document.getElementById('wmDesc');
+    if (!modal) return;
+
+    if (icon) icon.innerText = prize.icon;
+    if (title) title.innerText = prize.title;
+    if (desc) desc.innerText = prize.desc;
+
+    modal.classList.add('show');
+}
+
+window.closeWheelModal = function() {
+    const modal = document.getElementById('wheelModal');
+    if (modal) modal.classList.remove('show');
 };
 
 /* ════════════════════════════════
@@ -423,63 +502,71 @@ window.hitDrum = function(el, color) {
 };
 
 /* ════════════════════════════════
-   G10: VẼ CẦU VỒNG
+   G10: THẢ HOA ĐĂNG CẦU NGUYỆN 🪷
 ════════════════════════════════ */
-let rbCanvas, rbCtx, rbActive = false, rbColor = 0, rbStrokeCount = 0, rbInited = false;
-const RB_COLORS = ['#ff0000','#ff7700','#ffff00','#00ff00','#00ccff','#0000ff','#ff00ff'];
-const RB_MSGS = [
-    '🌈 Cầu vồng của Thư đẹp tuyệt vời!',
-    '✨ Bầu trời của Thư lấp lánh rồi!',
-    '🎨 Một tác phẩm nghệ thuật! Chúc Thư luôn rực rỡ!',
+let riverInited = false;
+let riverCount = 0;
+const RIVER_FLOWERS = ['🪷', '🌸', '🌼', '🌺', '🪻'];
+const RIVER_WISHES = [
+    'Thư Bình An 🕊️', 'Thư Hạnh Phúc 💖', 'Vạn Sự Như Ý ✨',
+    'Luôn Tỏa Sáng 🌟', 'May Mắn Cả Năm 🍀', 'Xinh Đẹp Rạng Ngời 🌸',
+    'Ước Gì Được Nấy 🌕', 'Bình Yên Thanh Thản 🏮', 'Nụ Cười Luôn Nở 😊'
 ];
 
-function initRainbow() {
-    if (rbInited) return;
-    rbInited = true;
-    rbCanvas = document.getElementById('rainbowCanvas');
-    rbCtx = rbCanvas.getContext('2d');
-    const resize = () => {
-        rbCanvas.width  = rbCanvas.parentElement.clientWidth;
-        rbCanvas.height = rbCanvas.parentElement.clientHeight;
-    };
-    resize();
+function initRiverLanterns() {
+    if (riverInited) return;
+    riverInited = true;
 
-    const getPos = (e) => {
-        const r = rbCanvas.getBoundingClientRect();
-        const t = e.touches ? e.touches[0] : e;
-        return { x: t.clientX - r.left, y: t.clientY - r.top };
-    };
-
-    rbCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); rbActive = true; const p = getPos(e); rbCtx.beginPath(); rbCtx.moveTo(p.x, p.y); }, { passive: false });
-    rbCanvas.addEventListener('touchmove',  (e) => {
-        e.preventDefault();
-        if (!rbActive) return;
-        const p = getPos(e);
-        rbCtx.lineTo(p.x, p.y);
-        rbCtx.strokeStyle = RB_COLORS[rbColor % RB_COLORS.length];
-        rbCtx.lineWidth = 12; rbCtx.lineCap = 'round'; rbCtx.lineJoin = 'round';
-        rbCtx.globalAlpha = 0.85;
-        rbCtx.stroke();
-    }, { passive: false });
-    rbCanvas.addEventListener('touchend', (e) => {
-        rbActive = false; rbColor++; rbStrokeCount++;
-        rbCtx.beginPath();
-        if (rbStrokeCount >= 4) {
-            const msg = document.getElementById('rbCompleteMsg');
-            msg.innerText = pickG(RB_MSGS);
-            msg.classList.add('show');
-        }
-    });
-
-    // Mouse support
-    rbCanvas.addEventListener('mousedown', (e) => { rbActive = true; const p = getPos(e); rbCtx.beginPath(); rbCtx.moveTo(p.x, p.y); });
-    rbCanvas.addEventListener('mousemove', (e) => {
-        if (!rbActive) return;
-        const p = getPos(e);
-        rbCtx.lineTo(p.x, p.y);
-        rbCtx.strokeStyle = RB_COLORS[rbColor % RB_COLORS.length];
-        rbCtx.lineWidth = 12; rbCtx.lineCap = 'round';
-        rbCtx.globalAlpha = 0.85; rbCtx.stroke();
-    });
-    rbCanvas.addEventListener('mouseup', () => { rbActive = false; rbColor++; rbStrokeCount++; rbCtx.beginPath(); });
+    // Tự thả sẵn 2 hoa đăng ban đầu bập bềnh
+    setTimeout(() => createFloatingLantern(25, 60, pickG(RIVER_WISHES)), 400);
+    setTimeout(() => createFloatingLantern(65, 75, pickG(RIVER_WISHES)), 1200);
 }
+
+function createFloatingLantern(xPercent, yPercent, wishText) {
+    const container = document.getElementById('riverLanternsContainer');
+    if (!container) return;
+
+    const item = document.createElement('div');
+    item.className = 'river-lantern-item';
+    item.style.left = `${Math.max(10, Math.min(xPercent, 82))}%`;
+    item.style.top = `${Math.max(20, Math.min(yPercent, 80))}%`;
+
+    const flowerEmoji = pickG(RIVER_FLOWERS);
+
+    item.innerHTML = `
+        <div class="rl-wish-tag">${wishText}</div>
+        <div class="rl-flower">
+            <span class="rl-flame">🕯️</span>
+            ${flowerEmoji}
+        </div>
+        <div class="rl-ripple"></div>
+    `;
+
+    container.appendChild(item);
+
+    // Tự biến mất sau 12.5s
+    setTimeout(() => {
+        if (item.parentElement) item.remove();
+    }, 12500);
+}
+
+window.spawnRiverLantern = function(e) {
+    const section = document.getElementById('sec-lantern-river');
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : e;
+    const clientX = touch.clientX !== undefined ? touch.clientX : e.clientX;
+    const clientY = touch.clientY !== undefined ? touch.clientY : e.clientY;
+
+    const xPercent = ((clientX - rect.left) / rect.width) * 100;
+    let yPercent = ((clientY - rect.top) / rect.height) * 100;
+    if (yPercent < 35) yPercent = rndG(42, 75);
+
+    riverCount++;
+    const countEl = document.getElementById('riverCount');
+    if (countEl) countEl.innerText = riverCount;
+
+    const wish = pickG(RIVER_WISHES);
+    createFloatingLantern(xPercent, yPercent, wish);
+};
