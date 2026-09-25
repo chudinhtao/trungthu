@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trung Thu Của Đào Anh Thư 🥮</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="games.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Nhạc nền Trung Thu (Full Repeat) -->
+    <audio id="bgMusic" src="nhac.mp3" preload="auto" loop playsinline></audio>
+
+    <!-- Nút điều khiển nhạc nổi cố định -->
+    <button class="music-toggle-btn is-playing" id="musicToggleBtn" aria-label="Bật/Tắt nhạc nền" title="Bật/Tắt nhạc nền Trung Thu">
+        <div class="music-disc-wrap">
+            <span class="music-icon">🎵</span>
+        </div>
+        <div class="music-waves">
+            <span class="m-bar"></span>
+            <span class="m-bar"></span>
+            <span class="m-bar"></span>
+            <span class="m-bar"></span>
+        </div>
+        <span class="music-label">Nhạc Trung Thu</span>
+    </button>
+
+    <div class="mobile-container scroll-container">
+
+        <!-- S1: PHÁO HOA KHAI MÀN -->
+        <section class="section" id="sec-fireworks">
+            <div class="bg bg-galaxy-fw"></div>
+            <canvas id="fireworksCanvas"></canvas>
+            <!-- Con Lân CSS Animation -->
+            <div class="lan-stage" id="lanDancer">
+                <div class="lan-unit lan-left">
+                    <div class="lan-emoji">🦁</div>
+                    <div class="lan-drum">🥁</div>
+                </div>
+                <div class="lan-unit lan-center">
+                    <div class="lan-emoji big">🎊</div>
+                    <div class="lan-ball">🔴</div>
+                </div>
+                <div class="lan-unit lan-right">
+                    <div class="lan-emoji">🦁</div>
+                    <div class="lan-drum">🥁</div>
+                </div>
+            </div>
+            <div class="content content-center z-10 pointer-none fw-content">
+                <div class="fw-to-label">Gửi đến 🌙</div>
+                <h1 class="fw-name">Đào Anh Thư</h1>
+                <div class="fw-divider"></div>
+                <p class="fw-wish">
+                    Chúc Thư một mùa Trung Thu<br>
+                    thật rực rỡ và ngập tràn hạnh phúc 🌕<br>
+                    <span class="fw-sub">Vạn sự như ý · Bình an mạnh khoẻ · Luôn tỏa sáng</span>
+                </p>
+                <p class="hint-text" style="margin-top:14px">👆 Chạm bầu trời để bắn pháo hoa</p>
+            </div>
+            <div class="scroll-hint">Khám phá tiếp 👆</div>
+        </section>
+
+
+        <!-- S2: MÈO THẦN KỲ -->
+        <section class="section" id="sec-intro">
+            <div class="bg bg-galaxy rotating-bg"></div>
+            <div class="stars-container" id="starsContainer"></div>
+            <div class="moon" onclick="pokeMoon()"></div>
+            <div id="moonMsg" class="popup-msg">🐇 Thỏ Ngọc đang làm bánh nè!</div>
+
+            <!-- Nhiều chú mèo may mắn -->
+            <div class="lucky-cat cat-1" onclick="catWave(this)">🐱</div>
+            <div class="lucky-cat cat-2" onclick="catWave(this)">😺</div>
+            <div class="lucky-cat cat-3" onclick="catWave(this)">🐈</div>
+            
+            <div class="content pointer-none">
+                <h1 class="title shimmer-text">Gửi Đào Anh Thư</h1>
+                <p class="subtitle">Hy vọng mỗi ngày của Thư<br>đều lấp lánh như bầu trời đêm nay ✨</p>
+                <p class="hint-text">👆 Chạm vào trăng · Chạm mèo xem nó phản ứng!</p>
+            </div>
+        </section>
+
+        <!-- S3: VŨ TRỤ ẢNH 3D ORBIT -->
+        <section class="section" id="sec-gallery">
+            <div class="bg bg-gallery-bg"></div>
+            <!-- Ngôi sao nền -->
+            <div class="stars-container" id="starsGallery"></div>
+            <!-- Hành tinh trung tâm -->
+            <div class="orbit-center">🌟</div>
+            <!-- Vòng quay 3D -->
+            <div class="orbit-ring" id="orbitRing">
+                <div class="orbit-photo op-0" onclick="likePhoto(this)" style="--idx:0">
+                    <img src="thu1.jpg" alt="Đào Anh Thư 1">
+                    <div class="photo-label">✨ Đào Anh Thư</div>
+                </div>
+                <div class="orbit-photo op-1" onclick="likePhoto(this)" style="--idx:1">
+                    <img src="thu2.jpg" alt="Đào Anh Thư 2">
+                    <div class="photo-label">🌟 Đáng yêu</div>
+                </div>
+                <div class="orbit-photo op-2" onclick="likePhoto(this)" style="--idx:2">
+                    <img src="thu3.jpg" alt="Đào Anh Thư 3">
+                    <div class="photo-label">🥰 Xinh đẹp</div>
+                </div>
+                <div class="orbit-photo op-3" onclick="likePhoto(this)" style="--idx:3">
+                    <img src="thu4.jpg" alt="Đào Anh Thư 4">
+                    <div class="photo-label">🌕 Rạng rỡ</div>
+                </div>
+            </div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-pink">✨ Vũ Trụ Của Thư ✨</h2>
+                <p class="hint-text">Ảnh bay quanh vũ trụ · Chạm để thả tim 💖</p>
+            </div>
+            <!-- Thỏ Ngọc bay vòng quanh -->
+            <div class="orbit-rabbit">🐰</div>
+        </section>
+
+        <!-- S4: MƯA TÊN MA THUẬT -->
+        <section class="section" id="sec-wishes" onclick="burstNames(event)">
+            <div class="bg bg-wishes"></div>
+            <div id="wishesContainer"></div>
+            <!-- Con lân kéo biển chạy ngang -->
+            <div class="parade-float">
+                <div class="parade-lan">🦁</div>
+                <div class="parade-text">Chúc Mừng Đào Anh Thư!</div>
+                <div class="parade-lan">🦁</div>
+            </div>
+            <div class="content pointer-none">
+                <h2 class="section-title neon-gold">🌟 Mưa Tên Thư 🌟</h2>
+                <p class="subtitle">Chạm bất kỳ đâu để tạo cơn bão!</p>
+            </div>
+        </section>
+
+        <!-- S5: HỒ HOA ĐĂNG -->
+        <section class="section" id="sec-hoadang" onclick="spawnBigLantern(event)">
+            <div class="bg bg-lake gradient-move"></div>
+            <div id="riverContainer"></div>
+            <!-- Dòng sóng nước -->
+            <div class="water-wave"></div>
+            <div class="water-wave wave-2"></div>
+            <!-- Vịt nổi trên mặt nước -->
+            <div class="water-duck">🦆</div>
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title neon-orange">🏮 Hoa Đăng 🏮</h2>
+                <p class="subtitle">Chạm để thả đèn của riêng Thư!</p>
+            </div>
+        </section>
+
+        <!-- S6: LỒNG ĐÈN BÍ MẬT + ĐÈN NHẢY -->
+        <section class="section" id="sec-lantern">
+            <div class="bg bg-purple-deep"></div>
+            <!-- Nhiều lồng đèn nền -->
+            <div class="bg-lantern bl-1"></div>
+            <div class="bg-lantern bl-2"></div>
+            <div class="bg-lantern bl-3"></div>
+            <!-- Đèn lồng chính -->
+            <div class="lantern lantern-center" onclick="openLanternMsg()">
+                <div class="lantern-body"><span class="lantern-text">🥮</span></div>
+                <div class="lantern-tail"></div>
+            </div>
+            <!-- Chú lân nhỏ bên cạnh -->
+            <div class="side-lan-left">🦁</div>
+            <div class="side-lan-right">🦁</div>
+
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title neon-pink">✨ Lồng Đèn Bí Mật ✨</h2>
+                <p class="subtitle">Chạm vào lồng đèn để nhận lời chúc bí mật!</p>
+                <div id="lanternMsg" class="hidden-msg">🎁 Chúc Thư luôn bình an, tỏa sáng và xinh đẹp mãi như ánh trăng! ✨</div>
+            </div>
+        </section>
+
+        <!-- S7: VŨ ĐIỆU SAO -->
+        <section class="section" id="sec-stars" onclick="burstStars(event)">
+            <div class="bg bg-cosmos"></div>
+            <div id="heartsContainer"></div>
+            <!-- Con mèo vũ trụ -->
+            <div class="space-cat" id="spaceCat">🐱</div>
+            <div class="space-cat cat-b" id="spaceCat2">😸</div>
+            <!-- Hành tinh quay -->
+            <div class="planet planet-1">🪐</div>
+            <div class="planet planet-2">🌙</div>
+
+            <div class="content pointer-none">
+                <h2 class="section-title neon-blue">🌟 Tỏa Sáng 🌟</h2>
+                <p class="subtitle">Chạm để làm nổ tung bầu trời!</p>
+            </div>
+        </section>
+
+        <!-- S8: BÓI TRĂNG - FORTUNE CARDS -->
+        <section class="section" id="sec-moonphase">
+            <div class="bg bg-fortune"></div>
+            <div class="stars-container" id="starsContainer2"></div>
+            <!-- Trăng trên nền -->
+            <div class="fortune-moon">🌕</div>
+            <!-- Thỏ Ngọc đứng cạnh bàn bói -->
+            <div class="fortune-rabbit">🐰</div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-gold">🔮 Bói Trăng 🔮</h2>
+                <p class="subtitle">Thư chọn 1 lá bài để nhận lời tiên tri!</p>
+            </div>
+            <!-- 3 lá bài bói -->
+            <div class="fortune-cards">
+                <div class="fortune-card" id="fc0" onclick="flipCard(0)">
+                    <div class="fc-front">🌙<br><span>Lá 1</span></div>
+                    <div class="fc-back" id="fcb0"></div>
+                </div>
+                <div class="fortune-card" id="fc1" onclick="flipCard(1)">
+                    <div class="fc-front">⭐<br><span>Lá 2</span></div>
+                    <div class="fc-back" id="fcb1"></div>
+                </div>
+                <div class="fortune-card" id="fc2" onclick="flipCard(2)">
+                    <div class="fc-front">🔮<br><span>Lá 3</span></div>
+                    <div class="fc-back" id="fcb2"></div>
+                </div>
+            </div>
+            <div id="fortuneResult" class="fortune-result"></div>
+        </section>
+
+        <!-- S9: MƯA SAO BĂNG + PANDA MÚA -->
+        <section class="section" id="sec-meteor" onclick="summonMeteors()">
+            <div class="bg bg-deep-space"></div>
+            <div class="meteor-shower" id="meteorShower"></div>
+            <!-- Trái đất quay -->
+            <div class="earth-spin">🌏</div>
+            <!-- Mèo phi hành gia -->
+            <div class="astronaut-cat">🐱‍🚀</div>
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title neon-blue">☄️ Sao Băng ☄️</h2>
+                <p class="subtitle">Chạm để gọi mưa sao băng và ước đi!</p>
+            </div>
+        </section>
+
+        <!-- S10: HỘP QUÀ TIỆC TÙNG -->
+        <section class="section" id="sec-gift">
+            <div class="bg bg-party"></div>
+            <div id="confettiContainer"></div>
+            <!-- Lân ăn mừng chạy ngang -->
+            <div class="parade-float party-parade">
+                <div class="parade-lan">🦁</div>
+                <div class="parade-lan">🐉</div>
+                <div class="parade-lan">🦁</div>
+            </div>
+            <!-- Bóng bay -->
+            <div class="balloon b1">🎈</div>
+            <div class="balloon b2">🎈</div>
+            <div class="balloon b3">🎈</div>
+            <div class="balloon b4">🎉</div>
+
+            <div class="gift-box" id="giftBox" onclick="openGift()">🎁</div>
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title rainbow-text">🎁 Quà Bất Ngờ 🎁</h2>
+                <p class="subtitle">Chạm vào hộp quà nhé!</p>
+                <div id="giftMsg" class="hidden-msg big-msg">🎊 Chúc Đào Anh Thư một Trung Thu cực vui và ngập tràn hạnh phúc! 🥮✨</div>
+            </div>
+        </section>
+
+        <!-- G1: BẮT SAO RƠI ⭐ -->
+        <section class="section" id="sec-catch-stars">
+            <div class="bg bg-deep-space"></div>
+            <div class="stars-container" id="starsCatch"></div>
+            <div class="g-score-bar">
+                <span class="g-score-label">⭐ Đã bắt:</span>
+                <span class="g-score-val" id="catchScore">0</span>
+            </div>
+            <div id="catchArea" class="catch-area"></div>
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title neon-gold">⭐ Bắt Sao Rơi ⭐</h2>
+                <p class="subtitle">Chạm nhanh vào các vì sao trước khi chúng biến mất!</p>
+            </div>
+        </section>
+
+        <!-- G2: LÀM BÁNH TRUNG THU 🥮 -->
+        <section class="section" id="sec-mooncake">
+            <div class="bg bg-mooncake-bg"></div>
+            <div class="mc-table">
+                <div class="mc-cake-area">
+                    <div class="mc-cake" id="mcCake">🟤</div>
+                    <div class="mc-layers" id="mcLayers"></div>
+                </div>
+                <div class="mc-toppings">
+                    <div class="mc-topping" onclick="addTopping('🥚','Trứng Muối')">🥚</div>
+                    <div class="mc-topping" onclick="addTopping('🌰','Hạt Sen')">🌰</div>
+                    <div class="mc-topping" onclick="addTopping('🍯','Mật Ong')">🍯</div>
+                    <div class="mc-topping" onclick="addTopping('🫐','Đậu Xanh')">🫐</div>
+                    <div class="mc-topping" onclick="addTopping('🥕','Bí Ngô')">🥕</div>
+                </div>
+            </div>
+            <div id="mcResult" class="mc-result"></div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-orange">🥮 Làm Bánh Trung Thu</h2>
+                <p class="subtitle">Chọn nguyên liệu để tạo ra chiếc bánh độc đáo!</p>
+            </div>
+        </section>
+
+        <!-- G3: MÈO NHẢY CAO 🐱 -->
+        <section class="section" id="sec-cat-jump">
+            <div class="bg bg-cosmos"></div>
+            <div class="cj-stars" id="cjStars"></div>
+            <div class="cj-height-bar"><div class="cj-height-fill" id="cjHeightFill"></div></div>
+            <div class="cj-cat" id="cjCat">🐱</div>
+            <div class="cj-ground">🌿🌿🌿🌿🌿🌿🌿🌿</div>
+            <div class="cj-info">
+                <div class="cj-taps" id="cjTaps">0</div>
+                <div class="cj-timer" id="cjTimer">▶ Chạm để bắt đầu!</div>
+            </div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-pink">🐱 Mèo Nhảy Cao</h2>
+                <p class="subtitle">Chạm liên tục 5 giây — mèo nhảy cao theo số lần!</p>
+            </div>
+        </section>
+
+        <!-- G4: KÉO ĐÈN LỒNG 🏮 -->
+        <section class="section" id="sec-drag-lantern">
+            <div class="bg bg-purple-deep"></div>
+            <div class="stars-container" id="starsDl"></div>
+            <div class="dl-moon">🌕</div>
+            <div class="dl-finish">✨ Vạch ước nguyện ✨</div>
+            <div class="dl-lantern" id="dlLantern">🏮</div>
+            <div id="dlMsg" class="dl-msg"></div>
+            <div class="content content-bottom z-10 pointer-none">
+                <h2 class="section-title neon-orange">🏮 Thả Đèn Lên Trời</h2>
+                <p class="subtitle">Kéo chiếc đèn lồng lên đến vạch vàng!</p>
+            </div>
+        </section>
+
+        <!-- G5: VẼ TỰ DO 🎨 -->
+        <section class="section" id="sec-draw">
+            <div class="bg bg-blue"></div>
+            <canvas id="drawCanvas" class="draw-canvas"></canvas>
+            <div class="draw-palette">
+                <div class="draw-color dc-1" onclick="setColor('#ffeb3b')" style="background:#ffeb3b"></div>
+                <div class="draw-color dc-2" onclick="setColor('#ff6b9d')" style="background:#ff6b9d"></div>
+                <div class="draw-color dc-3" onclick="setColor('#00eeff')" style="background:#00eeff"></div>
+                <div class="draw-color dc-4" onclick="setColor('#ff4b2b')" style="background:#ff4b2b"></div>
+                <div class="draw-color dc-5" onclick="setColor('#00ff88')" style="background:#00ff88"></div>
+                <div class="draw-color dc-clear" onclick="clearDraw()">🗑️</div>
+            </div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title shimmer-text">🎨 Vẽ Bầu Trời Thư</h2>
+                <p class="subtitle">Vẽ tự do bầu trời Trung Thu của riêng Thư!</p>
+            </div>
+        </section>
+
+        <!-- G6: CUỘN THƯ BÍ MẬT 📜 -->
+        <section class="section" id="sec-scroll-letter">
+            <div class="bg bg-gallery-bg"></div>
+            <div class="letter-wrap" id="letterWrap">
+                <div class="letter-roller top-roller"></div>
+                <div class="letter-body" id="letterBody">
+                    <div class="letter-inner">
+                        <p>🌙 <em>Thư ơi...</em></p>
+                        <p>Mỗi mùa Trung Thu qua đi,</p>
+                        <p>lại thêm một năm Thư trưởng thành</p>
+                        <p>và tỏa sáng hơn.</p>
+                        <p>Chúc Thư luôn mạnh khoẻ,</p>
+                        <p>bình an và hạnh phúc mãi mãi!</p>
+                        <p>🥮✨🌕✨🥮</p>
+                        <p class="letter-sig">— Trung Thu 2026 —</p>
+                    </div>
+                </div>
+                <div class="letter-roller bot-roller"></div>
+            </div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-gold">📜 Thư Bí Mật</h2>
+                <p class="subtitle">Vuốt lên cuộn thư để đọc lời nhắn!</p>
+            </div>
+        </section>
+
+        <!-- G7: VƯỜN HOA 🌸 -->
+        <section class="section" id="sec-garden">
+            <div class="bg bg-garden-bg"></div>
+            <div class="garden-sky">
+                <div class="gd-cloud">☁️</div>
+                <div class="gd-cloud gd-c2">🌤️</div>
+                <div class="gd-sun">☀️</div>
+            </div>
+            <div class="garden-ground-strip"></div>
+            <div class="garden-area" id="gardenArea" onclick="plantFlower(event)"></div>
+            <div class="g-score-bar" style="top:auto;bottom:18%">
+                <span class="g-score-label">🌸 Hoa:</span>
+                <span class="g-score-val" id="gardenCount">0</span>
+            </div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-pink">🌸 Vườn Hoa Của Thư</h2>
+                <p class="subtitle">Chạm vào đất để trồng hoa!</p>
+            </div>
+        </section>
+
+        <!-- G8: TUNG HỨNG 🎪 -->
+        <section class="section" id="sec-juggle">
+            <div class="bg bg-cosmos"></div>
+            <div class="juggle-cat" id="juggleCat">🐱</div>
+            <div class="juggle-score-bar">
+                <span class="g-score-label">🎪 Combo:</span>
+                <span class="g-score-val" id="juggleScore">0</span>
+            </div>
+            <div id="juggleBall" class="juggle-ball" onclick="catchBall()">🎾</div>
+            <div id="juggleMsg" class="juggle-msg"></div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-blue">🎪 Mèo Tung Hứng</h2>
+                <p class="subtitle">Chạm vào bóng khi nó xuống thấp để tung lên!</p>
+            </div>
+        </section>
+
+        <!-- G9: TRỐNG HỘI 🥁 -->
+        <section class="section" id="sec-drum">
+            <div class="bg bg-wishes"></div>
+            <div class="drum-lans">
+                <div class="drum-lan dl-l">🦁</div>
+                <div class="drum-lan dl-r">🦁</div>
+            </div>
+            <div class="drum-pads" id="drumPads">
+                <div class="drum-pad dp-red"   onclick="hitDrum(this,'#ff2200')">🥁<br><small>Trống</small></div>
+                <div class="drum-pad dp-gold"  onclick="hitDrum(this,'#ffcc00')">🔔<br><small>Chiêng</small></div>
+                <div class="drum-pad dp-blue"  onclick="hitDrum(this,'#0099ff')">🎵<br><small>Sáo</small></div>
+                <div class="drum-pad dp-green" onclick="hitDrum(this,'#00ff88')">🪘<br><small>Phèng</small></div>
+            </div>
+            <div id="drumRipples" class="drum-ripples"></div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title neon-gold">🥁 Trống Hội Trung Thu</h2>
+                <p class="subtitle">Thư là nhạc công! Chạm tạo nhịp hội!</p>
+            </div>
+        </section>
+
+        <!-- G10: VẼ CẦU VỒNG 🌈 -->
+        <section class="section" id="sec-rainbow">
+            <div class="bg bg-night-deep"></div>
+            <canvas id="rainbowCanvas" class="rainbow-canvas"></canvas>
+            <div class="rb-cats">
+                <div class="rb-cat rc1">🐱</div>
+                <div class="rb-cat rc2">😸</div>
+            </div>
+            <div id="rbCompleteMsg" class="rb-complete"></div>
+            <div class="content content-top z-10 pointer-none">
+                <h2 class="section-title rainbow-text">🌈 Vẽ Cầu Vồng</h2>
+                <p class="subtitle">Kéo ngón tay vẽ cầu vồng — màu tự đổi mỗi lần!</p>
+            </div>
+        </section>
+
+    </div>
+    <script src="script.js"></script>
+    <script src="games.js"></script>
+</body>
+</html>
